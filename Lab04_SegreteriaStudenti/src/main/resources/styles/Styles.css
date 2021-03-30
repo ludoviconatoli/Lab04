@@ -1,3 +1,6 @@
 .button {
     -fx-font-weight: bold;
 }
+btVerifica{
+	-fx-background-color: green
+}
