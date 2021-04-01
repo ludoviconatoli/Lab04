@@ -38,4 +38,12 @@ public class Model {
 		s.addAll(sd.getTuttiStudenti());
 		return s;
 	}
+	
+	public boolean verificaStudente(int matricola) {
+		return this.sd.verificaStudente(matricola);
+	}
+	
+	public List<Corso> getCorsiDiStudente(int matricola){
+		return this.cd.getCorsiDiStudente(matricola);
+	}
 }

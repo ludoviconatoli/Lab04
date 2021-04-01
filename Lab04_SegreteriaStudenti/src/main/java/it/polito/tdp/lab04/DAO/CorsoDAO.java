@@ -41,6 +41,8 @@ public class CorsoDAO {
 			}
 
 			corsi.add(new Corso("",0, "", 0));
+			rs.close();
+			st.close();
 			conn.close();
 			
 			return corsi;
@@ -86,6 +88,8 @@ public class CorsoDAO {
 				Studente stu = new Studente(rs.getInt("matricola"), rs.getString("cognome"), rs.getString("nome"), rs.getString("CDS"));
 				s.add(stu);
 			}
+			rs.close();
+			st.close();
 			conn.close();
 		}catch(SQLException sqle) {
 			sqle.printStackTrace();
@@ -98,26 +102,56 @@ public class CorsoDAO {
 	 * Data una matricola ed il codice insegnamento, iscrivi lo studente al corso.
 	 */
 	public boolean inscriviStudenteACorso(Studente studente, Corso corso) {
-		// TODO
+		
+		boolean trovato = false;
+		String sql ="SELECT s.matricola, s.cognome, s.nome, s.CDS "
+				+ "FROM studente s, iscrizione i, corso c "
+				+ "WHERE s.matricola = i.matricola AND s.matricola = ? "
+				+ "AND i.codins = c.codins AND c.codins = ?";
+		
+		try{
+			Connection conn = ConnectDB.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, studente.getMatricola());
+			st.setString(2, corso.getCodice());
+			
+			ResultSet rs = st.executeQuery();
+			
+			rs.close();
+			st.close();
+			conn.close();
+		}catch(SQLException sqle) {
+			System.out.println("Errore nella query");
+		}
+		
 		// ritorna true se l'iscrizione e' avvenuta con successo
-		return false;
+		return trovato;
 	}
 	
-	//SONO RIMASTO QUI
+	
 	public List<Corso> getCorsiDiStudente (int matricola){
-		final String sql = "SELECT * "
-				+ "FROM studente, iscrizione "
-				+ "WHERE studente.matricola = iscrizione.matricola";
+		final String sql = "SELECT c.codins, c.crediti, c.nome, c.pd "
+				+ "FROM studente s, iscrizione i, corso c "
+				+ "WHERE s.matricola = i.matricola AND s.matricola = ? "
+				+ "AND i.codins = c.codins";
 		
+		List<Corso> corsi = new ArrayList<>();
 		try {
 			Connection conn = ConnectDB.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
-			
+			st.setInt(1, matricola);
 			ResultSet rs = st.executeQuery();
+			
+			while(rs.next()) {
+				corsi.add(new Corso(rs.getString("codins"), rs.getInt("crediti"), rs.getString("nome"), rs.getInt("pd")));
+			}
+			rs.close();
+			st.close();
+			conn.close();
 		}catch(SQLException sqle) {
 			sqle.printStackTrace();
 		}
-		return null;
+		return corsi;
 	}
 
 }

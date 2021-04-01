@@ -27,6 +27,8 @@ public class StudenteDAO {
 				Studente stu = new Studente(rs.getInt("matricola"), rs.getString("cognome"), rs.getString("nome"), rs.getString("CDS"));
 				s.add(stu);
 			}
+			rs.close();
+			st.close();
 			conn.close();
 		}catch(SQLException sqle) {
 			sqle.printStackTrace();
@@ -35,4 +37,12 @@ public class StudenteDAO {
 		return s;
 	}
 	
+	public boolean verificaStudente(int matricola) {
+		List<Studente> studenti = this.getTuttiStudenti();
+		for(Studente s: studenti)
+			if(matricola == s.getMatricola())
+				return true;
+		
+		return false;
+	}
 }

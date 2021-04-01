@@ -6,6 +6,7 @@ package it.polito.tdp.lab04;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.lab04.model.Corso;
@@ -59,11 +60,35 @@ public class FXMLController {
 
     @FXML
     void doCercaCorsi(ActionEvent event) {
+    	this.txtResult.clear();
+    	int m = Integer.parseInt(txtMatricola.getText());
+    	boolean trovato = this.model.verificaStudente(m);
+    	if(trovato == false)
+    	{
+    		txtResult.setText("La matricola inserita non è corretta");
+    		return;
+    	}
     	
+    	List<Corso> c = this.model.getCorsiDiStudente(m);
+    	if(c.isEmpty())
+    	{
+    		this.txtResult.setText("Lo studente non è iscritto ad alcun corso");
+    		return;
+    	}
+    	
+    	StringBuilder sb = new StringBuilder();
+    	for(Corso co: c) {
+   			sb.append(String.format("%-8s", co.getCodice()));
+   			sb.append(String.format("%-3d", co.getCrediti()));
+   			sb.append(String.format("%-50s", co.getNome()));
+   			sb.append(String.format("%-3d\n", co.getPeriodo()));
+    	}
+    	txtResult.appendText(sb.toString());
     }
 
     @FXML
     void doCercaIscritti(ActionEvent event) {
+    	this.txtResult.clear();
     	Corso c = this.tendinaCorsi.getValue();
     	this.txtResult.setText("");
     	if(c == null)
@@ -73,15 +98,25 @@ public class FXMLController {
     	}
     	
     	ArrayList<Studente> stu = (ArrayList<Studente>) this.model.getStudentiIscritti(c);
+    	StringBuilder sb = new StringBuilder();
     	for(Studente stud: stu)
-    		this.txtResult.appendText(stud.toString() +"\n");
+    	{
+    		sb.append(String.format("%-7d", stud.getMatricola()));
+    		sb.append(String.format("%-20s", stud.getCognome()));
+    		sb.append(String.format("%-20s", stud.getNome()));
+    		sb.append(String.format("%-8s\n", stud.getCDS()));
+    	}
+    	
+    	this.txtResult.appendText(sb.toString());
     	
     	return;
     }
 
     @FXML
     void doIscrivi(ActionEvent event) {
-
+    	txtResult.clear();
+    	Corso c = this.tendinaCorsi.getValue();
+    	int matricola = Integer.parseInt(this.txtMatricola.getText());
     }
 
     @FXML
@@ -135,5 +170,6 @@ public class FXMLController {
     public void setModel(Model m) {
     	this.model = m;
        	this.tendinaCorsi.getItems().addAll(m.getTuttiICorsi());
+       	this.txtResult.setStyle("-fx-font-family: monospace");
     }
 }
