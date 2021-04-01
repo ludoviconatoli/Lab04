@@ -46,4 +46,11 @@ public class Model {
 	public List<Corso> getCorsiDiStudente(int matricola){
 		return this.cd.getCorsiDiStudente(matricola);
 	}
+	
+	public boolean iscriviStudente(int matricola, String codice){
+		Studente s = new Studente(matricola, null, null, null);
+		Corso c = new Corso(codice, 0, null, 0);
+		boolean trovato = this.cd.inscriviStudenteACorso(s, c);
+		return trovato;
+	}
 }

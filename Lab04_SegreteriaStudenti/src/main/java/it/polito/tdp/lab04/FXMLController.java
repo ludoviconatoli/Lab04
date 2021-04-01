@@ -115,8 +115,35 @@ public class FXMLController {
     @FXML
     void doIscrivi(ActionEvent event) {
     	txtResult.clear();
+    	String s = this.txtMatricola.getText();
+    	if(s == "") {
+    		this.txtResult.setText("Devi inserire un numero di matricola");
+    		return;
+    	}
+    	
     	Corso c = this.tendinaCorsi.getValue();
+    	if(c == null)
+    	{
+    		this.txtResult.setText("Devi selezionare un corso");
+    		return;
+    	}
+    	
     	int matricola = Integer.parseInt(this.txtMatricola.getText());
+    	boolean found = this.model.verificaStudente(matricola);
+    	if(found == false)
+    	{
+    		txtResult.setText("La matricola inserita non è corretta");
+    		return;
+    	}
+    	
+    	boolean trovato = this.model.iscriviStudente(matricola, c.getCodice());
+    	if(trovato == true) {
+    		this.txtResult.setText("La matricola è stata iscritta!");
+    		return;
+    	}else {
+    		this.txtResult.setText("La matricola è già iscritta al corso indicato");
+    		return;
+    	}
     }
 
     @FXML

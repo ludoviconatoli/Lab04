@@ -98,9 +98,7 @@ public class CorsoDAO {
 		return s;
 	}
 
-	/*
-	 * Data una matricola ed il codice insegnamento, iscrivi lo studente al corso.
-	 */
+	
 	public boolean inscriviStudenteACorso(Studente studente, Corso corso) {
 		
 		boolean trovato = false;
@@ -116,7 +114,14 @@ public class CorsoDAO {
 			st.setString(2, corso.getCodice());
 			
 			ResultSet rs = st.executeQuery();
-			
+			if(!rs.next()) {
+				
+				rs.insertRow();
+				rs.close();
+				st.close();
+				conn.close();
+				return true;
+			}
 			rs.close();
 			st.close();
 			conn.close();
@@ -124,7 +129,6 @@ public class CorsoDAO {
 			System.out.println("Errore nella query");
 		}
 		
-		// ritorna true se l'iscrizione e' avvenuta con successo
 		return trovato;
 	}
 	
