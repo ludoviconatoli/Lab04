@@ -198,5 +198,6 @@ public class FXMLController {
     	this.model = m;
        	this.tendinaCorsi.getItems().addAll(m.getTuttiICorsi());
        	this.txtResult.setStyle("-fx-font-family: monospace");
+       	this.btVerifica.setStyle("-fx-background-color: LimeGreen");
     }
 }

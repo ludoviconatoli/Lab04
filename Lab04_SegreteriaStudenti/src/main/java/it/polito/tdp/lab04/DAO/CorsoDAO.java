@@ -116,7 +116,13 @@ public class CorsoDAO {
 			ResultSet rs = st.executeQuery();
 			if(!rs.next()) {
 				
-				rs.insertRow();
+				String sql2 ="INSERT INTO iscrizione "
+						+ "VALUES (?, ?)";
+				
+				PreparedStatement st2 = conn.prepareStatement(sql2);
+				st.setInt(1, studente.getMatricola());
+				st.setString(2, corso.getCodice());
+				st2.executeUpdate();
 				rs.close();
 				st.close();
 				conn.close();
