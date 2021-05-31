@@ -63,15 +63,13 @@ public class FXMLController {
     	this.txtResult.clear();
     	int m = Integer.parseInt(txtMatricola.getText());
     	boolean trovato = this.model.verificaStudente(m);
-    	if(trovato == false)
-    	{
+    	if(trovato == false){
     		txtResult.setText("La matricola inserita non è corretta");
     		return;
     	}
     	
     	List<Corso> c = this.model.getCorsiDiStudente(m);
-    	if(c.isEmpty())
-    	{
+    	if(c.isEmpty()){
     		this.txtResult.setText("Lo studente non è iscritto ad alcun corso");
     		return;
     	}
@@ -83,6 +81,7 @@ public class FXMLController {
    			sb.append(String.format("%-50s", co.getNome()));
    			sb.append(String.format("%-3d\n", co.getPeriodo()));
     	}
+    	
     	txtResult.appendText(sb.toString());
     }
 

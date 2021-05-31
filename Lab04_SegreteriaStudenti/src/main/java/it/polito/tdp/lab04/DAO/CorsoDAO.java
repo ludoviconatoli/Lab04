@@ -102,10 +102,7 @@ public class CorsoDAO {
 	public boolean inscriviStudenteACorso(Studente studente, Corso corso) {
 		
 		boolean trovato = false;
-		String sql ="SELECT s.matricola, s.cognome, s.nome, s.CDS "
-				+ "FROM studente s, iscrizione i, corso c "
-				+ "WHERE s.matricola = i.matricola AND s.matricola = ? "
-				+ "AND i.codins = c.codins AND c.codins = ?";
+		String sql ="INSERT IGNORE INTO iscritticorsi.iscrizione (matricola, codins) VALUES(?, ?)";
 		
 		try{
 			Connection conn = ConnectDB.getConnection();
@@ -113,22 +110,12 @@ public class CorsoDAO {
 			st.setInt(1, studente.getMatricola());
 			st.setString(2, corso.getCodice());
 			
-			ResultSet rs = st.executeQuery();
-			if(!rs.next()) {
+			int rs = st.executeUpdate();
+			if(rs == 1) {
 				
-				String sql2 ="INSERT INTO iscrizione "
-						+ "VALUES (?, ?)";
-				
-				PreparedStatement st2 = conn.prepareStatement(sql2);
-				st.setInt(1, studente.getMatricola());
-				st.setString(2, corso.getCodice());
-				st2.executeUpdate();
-				rs.close();
-				st.close();
-				conn.close();
-				return true;
+				trovato = true;
 			}
-			rs.close();
+			
 			st.close();
 			conn.close();
 		}catch(SQLException sqle) {
